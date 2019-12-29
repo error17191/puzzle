@@ -1,16 +1,19 @@
 import 'dart:async';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import 'package:rflutter_alert/rflutter_alert.dart';
-
 
 List<PuzzlePiece> puzzlePieces = List<PuzzlePiece>();
 List<_PuzzlePieceState> pieceStates = List<_PuzzlePieceState>();
 double inBetweenDistance;
 double sideMargin;
 double imageWidth;
-double imageHeight = 100.0;
+double imageHeight;
+double offsetTop;
+double unusableHeight;
+
 var images = [
   {'order': 0, 'path': 'assets/images/1.jpg'},
   {'order': 1, 'path': 'assets/images/2.jpg'},
@@ -24,14 +27,29 @@ var images = [
 ];
 
 void main() {
-  runApp(MyApp());
+  runApp(MaterialApp(
+    home: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: DragApp(),
+      home: Scaffold(
+        appBar: AppBar(
+          title: Center(child: Text('a7la messa')),
+        ),
+        body: SafeArea(
+          child: LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              unusableHeight = MediaQuery.of(context).size.height -
+                  constraints.constrainHeight();
+              return DragApp();
+            },
+          ),
+        ),
+      ),
     );
   }
 }
@@ -42,18 +60,19 @@ class DragApp extends StatefulWidget {
 }
 
 class _DragAppState extends State<DragApp> {
+  int seconds = 0;
+  int minutes = 0;
 
-  int seconds=0;
-  int minutes=0;
   @override
   void initState() {
-   new Timer.periodic(Duration(seconds: 1),(Timer timer){
+    new Timer.periodic(Duration(seconds: 1), (Timer timer) {
       seconds++;
-      minutes=  (seconds ~/60.0).toInt();
+      minutes = (seconds ~/ 60.0).toInt();
       setState(() {});
     });
-   super.initState();
+    super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     images.shuffle();
@@ -63,17 +82,19 @@ class _DragAppState extends State<DragApp> {
     imageWidth = widthWithoutMargins * 0.32;
     sideMargin = widthWithoutMargins * 0.02;
 
-    return
-      FutureBuilder<Size>(
+    return FutureBuilder<Size>(
       future: _calculateImageDimension(),
       // a previously-obtained Future<String> or null
       builder: (BuildContext context, AsyncSnapshot<Size> snapshot) {
         if (snapshot.hasData) {
           imageHeight = snapshot.data.height * imageWidth / snapshot.data.width;
-          return
-            Stack(
+          offsetTop = (MediaQuery.of(context).size.height -
+                  (imageHeight * 3 + inBetweenDistance * 3)) /
+              2 - unusableHeight;
+          return Container(
+            color: Colors.red,
+            child: Stack(
               children: [
-                Text("Minutes ${minutes} seconds: ${seconds%60}"),
                 PuzzlePiece(0),
                 PuzzlePiece(1),
                 PuzzlePiece(2),
@@ -84,7 +105,8 @@ class _DragAppState extends State<DragApp> {
                 PuzzlePiece(7),
                 PuzzlePiece(8)
               ],
-            );
+            ),
+          );
         }
         return Container();
       },
@@ -101,11 +123,11 @@ class PuzzlePiece extends StatefulWidget {
   _PuzzlePieceState createState() {
     double top, left;
     if (i < 3) {
-      top = imageHeight + 30;
+      top = offsetTop;
     } else if (i < 6) {
-      top = imageHeight * 2 + inBetweenDistance + 30;
+      top = offsetTop + imageHeight + inBetweenDistance;
     } else {
-      top = imageHeight * 3 + inBetweenDistance * 2 + 30;
+      top = offsetTop + imageHeight * 2 + inBetweenDistance * 2;
     }
 
     if (i == 0 || i == 3 || i == 6) {
@@ -170,8 +192,10 @@ class _PuzzlePieceState extends State<PuzzlePiece> {
             }
             if ((pieceStates[i].position['left'] - details.offset.dx).abs() <
                     imageWidth / 2 &&
-                (pieceStates[i].position['top'] - details.offset.dy).abs() <
-                    imageWidth / 2) {
+                (pieceStates[i].position['top'] -
+                            (details.offset.dy - unusableHeight))
+                        .abs() <
+                    imageHeight / 2) {
               String currentImagePath = imagePath;
               int currentOrder = order;
               updateImage(pieceStates[i].getImagePath(), pieceStates[i].order);
@@ -180,7 +204,7 @@ class _PuzzlePieceState extends State<PuzzlePiece> {
             }
           }
           if (puzzleCompleted()) {
-            var timer= Timer(Duration(seconds:1),(){
+            var timer = Timer(Duration(seconds: 1), () {
               Alert(
                 context: context,
                 type: AlertType.success,
@@ -198,7 +222,6 @@ class _PuzzlePieceState extends State<PuzzlePiece> {
                 ],
               ).show();
             });
-
           }
         },
         child: image,
