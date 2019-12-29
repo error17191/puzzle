@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
+import 'package:rflutter_alert/rflutter_alert.dart';
+
 
 List<PuzzlePiece> puzzlePieces = List<PuzzlePiece>();
 List<_PuzzlePieceState> pieceStates = List<_PuzzlePieceState>();
@@ -40,35 +42,49 @@ class DragApp extends StatefulWidget {
 }
 
 class _DragAppState extends State<DragApp> {
+
+  int seconds=0;
+  int minutes=0;
+  @override
+  void initState() {
+   new Timer.periodic(Duration(seconds: 1),(Timer timer){
+      seconds++;
+      minutes=  (seconds ~/60.0).toInt();
+      setState(() {});
+    });
+   super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     images.shuffle();
-
     inBetweenDistance = 2;
     double widthWithoutMargins =
         MediaQuery.of(context).size.width - 2 * inBetweenDistance;
     imageWidth = widthWithoutMargins * 0.32;
     sideMargin = widthWithoutMargins * 0.02;
 
-    return FutureBuilder<Size>(
+    return
+      FutureBuilder<Size>(
       future: _calculateImageDimension(),
       // a previously-obtained Future<String> or null
       builder: (BuildContext context, AsyncSnapshot<Size> snapshot) {
         if (snapshot.hasData) {
           imageHeight = snapshot.data.height * imageWidth / snapshot.data.width;
-          return Stack(
-            children: [
-              PuzzlePiece(0),
-              PuzzlePiece(1),
-              PuzzlePiece(2),
-              PuzzlePiece(3),
-              PuzzlePiece(4),
-              PuzzlePiece(5),
-              PuzzlePiece(6),
-              PuzzlePiece(7),
-              PuzzlePiece(8),
-            ],
-          );
+          return
+            Stack(
+              children: [
+                Text("Minutes ${minutes} seconds: ${seconds%60}"),
+                PuzzlePiece(0),
+                PuzzlePiece(1),
+                PuzzlePiece(2),
+                PuzzlePiece(3),
+                PuzzlePiece(4),
+                PuzzlePiece(5),
+                PuzzlePiece(6),
+                PuzzlePiece(7),
+                PuzzlePiece(8)
+              ],
+            );
         }
         return Container();
       },
@@ -164,7 +180,25 @@ class _PuzzlePieceState extends State<PuzzlePiece> {
             }
           }
           if (puzzleCompleted()) {
-            print('DONE');
+            var timer= Timer(Duration(seconds:1),(){
+              Alert(
+                context: context,
+                type: AlertType.success,
+                title: "Congratulations",
+                desc: "You have Completed the puzzle successfully",
+                buttons: [
+                  DialogButton(
+                    child: Text(
+                      "PLAY AGAIN",
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                    width: 120,
+                  )
+                ],
+              ).show();
+            });
+
           }
         },
         child: image,
