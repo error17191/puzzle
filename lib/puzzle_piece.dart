@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
-import 'package:rflutter_alert/rflutter_alert.dart';
 
 List<PuzzlePiece> puzzlePieces = List<PuzzlePiece>();
 List<_PuzzlePieceState> pieceStates = List<_PuzzlePieceState>();
@@ -16,15 +15,15 @@ int minutes = 0;
 int seconds = 0;
 
 var images = [
-  {'order': 0, 'path': 'assets/images/1.jpg'},
-  {'order': 1, 'path': 'assets/images/2.jpg'},
-  {'order': 2, 'path': 'assets/images/3.jpg'},
-  {'order': 3, 'path': 'assets/images/4.jpg'},
-  {'order': 4, 'path': 'assets/images/5.jpg'},
-  {'order': 5, 'path': 'assets/images/6.jpg'},
-  {'order': 6, 'path': 'assets/images/7.jpg'},
-  {'order': 7, 'path': 'assets/images/8.jpg'},
-  {'order': 8, 'path': 'assets/images/9.jpg'},
+  {'order': 0, 'path': 'assets/images/image1_1.jpg'},
+  {'order': 1, 'path': 'assets/images/image1_2.jpg'},
+  {'order': 2, 'path': 'assets/images/image1_3.jpg'},
+  {'order': 3, 'path': 'assets/images/image1_4.jpg'},
+  {'order': 4, 'path': 'assets/images/image1_5.jpg'},
+  {'order': 5, 'path': 'assets/images/image1_6.jpg'},
+  {'order': 6, 'path': 'assets/images/image1_7.jpg'},
+  {'order': 7, 'path': 'assets/images/image1_8.jpg'},
+  {'order': 8, 'path': 'assets/images/image1_9.jpg'},
 ];
 
 class PuzzlePiece extends StatefulWidget {

@@ -20,6 +20,9 @@ dependencies:
   flutter:
     sdk: flutter
   rflutter_alert: ^1.0.3
+  image_picker: ^0.6.2+3
+  multi_image_picker: ^4.6.0
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -53,6 +56,17 @@ flutter:
     - assets/images/7.jpg
     - assets/images/8.jpg
     - assets/images/9.jpg
+    - assets/images/image1_1.jpg
+    - assets/images/image1_2.jpg
+    - assets/images/image1_3.jpg
+    - assets/images/image1_4.jpg
+    - assets/images/image1_5.jpg
+    - assets/images/image1_6.jpg
+    - assets/images/image1_7.jpg
+    - assets/images/image1_8.jpg
+    - assets/images/image1_9.jpg
+    - assets/images/batot.jpg
+    - assets/images/flower.jpg
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
