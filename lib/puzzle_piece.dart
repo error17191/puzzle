@@ -14,22 +14,13 @@ double unusableHeight;
 int minutes = 0;
 int seconds = 0;
 
-var images = [
-  {'order': 0, 'path': 'assets/images/image1_1.jpg'},
-  {'order': 1, 'path': 'assets/images/image1_2.jpg'},
-  {'order': 2, 'path': 'assets/images/image1_3.jpg'},
-  {'order': 3, 'path': 'assets/images/image1_4.jpg'},
-  {'order': 4, 'path': 'assets/images/image1_5.jpg'},
-  {'order': 5, 'path': 'assets/images/image1_6.jpg'},
-  {'order': 6, 'path': 'assets/images/image1_7.jpg'},
-  {'order': 7, 'path': 'assets/images/image1_8.jpg'},
-  {'order': 8, 'path': 'assets/images/image1_9.jpg'},
-];
+
 
 class PuzzlePiece extends StatefulWidget {
   int i;
+  var images;
 
-  PuzzlePiece(this.i);
+  PuzzlePiece(this.i,this.images);
 
   @override
   _PuzzlePieceState createState() {
@@ -129,9 +120,9 @@ class _PuzzlePieceState extends State<PuzzlePiece> {
                         color: Colors.blue,
                         child: new Text("Restart"),
                         onPressed: () {
-                          images.shuffle();
+                          widget.images.shuffle();
                           for (int i = 0; i < pieceStates.length; i++) {
-                            pieceStates[i].updateImage(images[i]['path'], images[i]['order']);
+                            pieceStates[i].updateImage(widget.images[i]['path'], widget.images[i]['order']);
                           }
                           setState(() {
                             minutes = 0;

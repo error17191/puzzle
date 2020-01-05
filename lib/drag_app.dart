@@ -3,6 +3,9 @@ import 'dart:async';
 import 'puzzle_piece.dart';
 
 class DragApp extends StatefulWidget {
+  var images;
+  DragApp({this.images});
+
   @override
   _DragAppState createState() => _DragAppState();
 }
@@ -11,7 +14,7 @@ class _DragAppState extends State<DragApp> {
 
   @override
   void initState() {
-    images.shuffle();
+    widget.images.shuffle();
     super.initState();
   }
   @override
@@ -23,7 +26,7 @@ class _DragAppState extends State<DragApp> {
     sideMargin = widthWithoutMargins * 0.02;
 
     return FutureBuilder<Size>(
-      future: _calculateImageDimension(),
+      future: _calculateImageDimension(widget.images),
       // a previously-obtained Future<String> or null
       builder: (BuildContext context, AsyncSnapshot<Size> snapshot) {
         if (snapshot.hasData) {
@@ -36,15 +39,15 @@ class _DragAppState extends State<DragApp> {
             color: Colors.red,
             child: Stack(
               children: [
-                PuzzlePiece(0),
-                PuzzlePiece(1),
-                PuzzlePiece(2),
-                PuzzlePiece(3),
-                PuzzlePiece(4),
-                PuzzlePiece(5),
-                PuzzlePiece(6),
-                PuzzlePiece(7),
-                PuzzlePiece(8)
+                PuzzlePiece(0,widget.images),
+                PuzzlePiece(1,widget.images),
+                PuzzlePiece(2,widget.images),
+                PuzzlePiece(3,widget.images),
+                PuzzlePiece(4,widget.images),
+                PuzzlePiece(5,widget.images),
+                PuzzlePiece(6,widget.images),
+                PuzzlePiece(7,widget.images),
+                PuzzlePiece(8,widget.images)
               ],
             ),
           );
@@ -55,7 +58,7 @@ class _DragAppState extends State<DragApp> {
   }
 }
 
-Future<Size> _calculateImageDimension() {
+Future<Size> _calculateImageDimension(images) {
   Completer<Size> completer = Completer();
   Image image = Image.asset(images[0]['path']);
   image.image.resolve(ImageConfiguration()).addListener(
